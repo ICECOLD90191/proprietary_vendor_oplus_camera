@@ -7,7 +7,8 @@ binder_call(hal_camera_default, opluscamera_app)
 hwbinder_use(opluscamera_app)
 
 # APS encodes through the HW JPEG service hosted by the camera provider.
-hal_client_domain(opluscamera_app, vendor_hal_camera_postproc)
+typeattribute opluscamera_app halclientdomain;
+typeattribute opluscamera_app hal_camera_client;
 
 # Adreno driver
 hal_client_domain(opluscamera_app, vendor_hal_qspmhal)
@@ -20,8 +21,7 @@ allow opluscamera_app vendor_qdsp_device:chr_file { ioctl read };
 get_prop(opluscamera_app, vendor_adsprpc_prop)
 
 # ArcSoft HDR offloads to a signed DSP process through the secure FastRPC node.
-typeattribute opluscamera_app vendor_xdsp_device_client;
-allow opluscamera_app vendor_xdsp_device:chr_file r_file_perms;
+allow opluscamera_app vendor_secure_fastrpc_device:chr_file r_file_perms;
 
 # Vendor data
 allow opluscamera_app { vendor_camera_data_file vendor_camera_update_data_file vendor_data_file }:dir create_dir_perms;

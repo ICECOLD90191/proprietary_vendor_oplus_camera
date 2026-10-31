@@ -1,2 +1,6 @@
 type public_adsprpcd_file, file_type;
 type proc_ufs_file, fs_type, proc_type;
+
+# The secure FastRPC node, relabeled from vendor_xdsp_device so the camera app can
+# read it.
+type vendor_secure_fastrpc_device, dev_type;

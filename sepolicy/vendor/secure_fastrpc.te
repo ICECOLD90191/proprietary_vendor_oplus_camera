@@ -1,0 +1,22 @@
+# Everything that reads vendor_xdsp_device on this platform.
+allow {
+    hal_camera_default
+    hal_contexthub_default
+    hal_sensors_default
+    vendor_adsprpcd
+    vendor_audioadsprpcd
+    vendor_cdsprpcd
+    vendor_chre
+    vendor_dspservice
+    vendor_lowirpcd_service
+    vendor_sensors
+} vendor_secure_fastrpc_device:chr_file r_file_perms;
+
+userdebug_or_eng(`
+  allow {
+      vendor_snapcam_app
+      vendor_sysmonapp_app_test
+      vendor_usta_app
+      vendor_ustaservice_app
+  } vendor_secure_fastrpc_device:chr_file r_file_perms;
+')
