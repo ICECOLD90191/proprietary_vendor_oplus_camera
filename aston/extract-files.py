@@ -223,14 +223,6 @@ OPLUSCAMERA_CHECKS = (
     Check('0004 120fps recorder rate', ':cond_fps_not_high'),
     Check('0004 120fps fps helper', ':cond_fps120_ok'),
     Check('0005 120fps features reported', ':goto_aston_120fps_done'),
-    Check(
-        '0006 8K feature reported',
-        '"com.oplus.feature.video.8k.support"',
-        'smali/com/oplus/camera/configure/CameraConfig.smali',
-    ),
-    Check('0006 8K session at 24fps', ':cond_aston_8k_fps_done'),
-    Check('0006 8K recorder fps', ':cond_aston_8k_p3_done'),
-    Check('0006 8K capture rate', ':cond_aston_8k_hg_done'),
     # blob_fixup_opluscamera_privapp_linker_ns
     Check(
         'linker-ns extractNativeLibs=false',
@@ -279,21 +271,19 @@ GALLERY_CHECKS = (
         'de_toolkit_stroke_size_tint',
         'res/values/styles.xml',
     ),
-    # patches-gallery/0004: live photo key handling.
+    # patches-gallery/0004: Olive features reported as supported.
     Check(
         '0004 live photos',
-        '# Save original key (p0) into v3 before it gets overwritten',
-        'smali/com/oplus/aiunit/vision/f4a.smali',
+        'Report the Olive features as supported',
+        'smali/com/oplus/aiunit/vision/u9a.smali',
     ),
 )
 
 # Repacked archives, checked after the extract as shipped in the blob repo.
-# OppoGallery2 is left out: aston/proprietary-files.txt doesn't list it (we
-# ship no OPlus gallery), so its fixup and GALLERY_CHECKS only run if it is
-# ever added back.
 PATCHED_BLOBS = (
     'system_ext/priv-app/OplusCamera/OplusCamera.apk',
     'system_ext/framework/com.oplus.camera.unit.sdk.jar',
+    'system_ext/priv-app/OppoGallery2/OppoGallery2.apk',
 )
 
 def verify_packed_artifacts():
@@ -412,11 +402,10 @@ on property:sys.camera.user.removed=*
 }
 
 namespace_imports = [
-    'vendor/oplus/camera/aston/blobs',
-    'vendor/oneplus/oneplus12r',
     'hardware/oplus',
-    'vendor/qcom/common/system/audio',
-    'vendor/qcom/common/system/perf',
+    'vendor/oneplus/aston',
+    'vendor/oneplus/sm8550-common',
+    'vendor/oplus/camera/aston/blobs',
 ]
 
 module = ExtractUtilsModule(

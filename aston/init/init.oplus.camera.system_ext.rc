@@ -1,0 +1,10 @@
+#
+# SPDX-FileCopyrightText: The LineageOS Project
+# SPDX-License-Identifier: Apache-2.0
+#
+
+on post-fs-data
+    # APS deferred-capture storage and logs, from stock init.oplus.rootdir.rc
+    mkdir /data/system/camera_rus 0777 cameraserver cameraserver
+    mkdir /data/vendor/camera_rus 0777 camera camera
+    mkdir /data/vendor/cam_alog 0777 camera camera

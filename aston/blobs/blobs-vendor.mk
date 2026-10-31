@@ -104,13 +104,16 @@ PRODUCT_PACKAGES += \
     libsingle_camera_bokeh_native \
     libsoundtouch.oplus \
     libsoundtouch_jni.oplus \
+    libsqlcipher \
     libst_mobile \
     libst_sticker_jni \
     libsuperNight.oplus \
     vendor.oplus.hardware.cameraMDM@1.0 \
     libOplusSecurity \
+    libsdk_sr_ref \
     ExtensionsService \
     OplusAppPlatform \
     OplusCamera \
+    OppoGallery2 \
     com.oplus.camera.unit.sdk.adapter \
     com.oplus.camera.unit.sdk
