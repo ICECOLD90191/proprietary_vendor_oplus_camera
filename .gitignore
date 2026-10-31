@@ -1,3 +1,0 @@
-*/blobs/*
-# aston ships its generated blobs; the patched OplusCamera.apk goes through Git LFS
-!aston/blobs/
