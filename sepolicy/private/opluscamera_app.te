@@ -57,12 +57,5 @@ allow opluscamera_app nfc_service:service_manager find;
 allow opluscamera_app system_server:udp_socket {
     getattr read recvfrom write getopt setopt };
 
-#  Suppress noisy debugfs denials
-dontaudit opluscamera_app debugfs_tracing:file rw_file_perms;
-
-# OplusShoulderPressureManagerService falls back to default_android_service
-# because it has no label. Cannot allow (neverallow blocks it), so suppress.
-dontaudit opluscamera_app default_android_service:service_manager find;
-
-# cameraserver sets scheduling policy of camera binder/capture threads.
+# cameraserver sets the scheduling policy of camera binder and capture threads.
 allow cameraserver opluscamera_app:process setsched;

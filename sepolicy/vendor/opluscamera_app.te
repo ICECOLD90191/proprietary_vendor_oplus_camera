@@ -1,83 +1,51 @@
 app_domain(opluscamera_app)
 net_domain(opluscamera_app)
 
+# Camera HAL
+binder_call(opluscamera_app, hal_camera_default)
+binder_call(hal_camera_default, opluscamera_app)
+hwbinder_use(opluscamera_app)
+
+# APS encodes through the HW JPEG service hosted by the camera provider.
+hal_client_domain(opluscamera_app, vendor_hal_camera_postproc)
+
+# Adreno driver
+hal_client_domain(opluscamera_app, vendor_hal_qspmhal)
+
+# DSP
+typeattribute opluscamera_app vendor_hal_dspmanager_client;
 allow opluscamera_app adsprpcd_file:dir r_dir_perms;
 allow opluscamera_app { adsprpcd_file public_adsprpcd_file }:file r_file_perms;
-
-allow opluscamera_app vendor_data_file:dir  { read open search write add_name remove_name create getattr rename setattr reparent rmdir };
-allow opluscamera_app vendor_data_file:file { read open write create unlink getattr rename setattr };
-allow opluscamera_app vendor_camera_update_data_file:file { read open write create unlink getattr rename setattr };
-allow opluscamera_app vendor_camera_update_data_file:dir { read open search write add_name remove_name create getattr rename setattr reparent rmdir };
-allow opluscamera_app vendor_xdsp_device:file { read open write create unlink getattr };
-allow opluscamera_app vendor_xdsp_device:chr_file { read open write create unlink getattr ioctl };
-allow opluscamera_app vendor_xdsp_device:dir { read open search write add_name remove_name create getattr };
-allow opluscamera_app vendor_qdsp_device:file { read open write create unlink getattr };
-allow opluscamera_app vendor_qdsp_device:dir { read open search write add_name remove_name create getattr };
-allow opluscamera_app proc_ufs_file:file { read open write create getattr };
-allow opluscamera_app opluscamera_app_data_file:file { read open write create unlink getattr rename setattr };
-allow opluscamera_app opluscamera_app_data_file:dir { read open search write add_name remove_name create getattr rename setattr reparent rmdir };
-
-allow opluscamera_app vendor_camera_data_file:dir { read open search write add_name remove_name create getattr rename setattr reparent rmdir };
-allow opluscamera_app vendor_camera_data_file:file { read open write create unlink getattr rename setattr };
-
-# FastRPC devices
-# vendor_qdsp_device: read-only only — neverallow on SM8750 blocks write/append
-# for non-HAL domains. The camera app only needs to open/read/ioctl for DSP
-# session setup; actual writes go through the HAL.
 allow opluscamera_app vendor_qdsp_device:chr_file { ioctl read };
+get_prop(opluscamera_app, vendor_adsprpc_prop)
 
-# selinuxfs
-allow opluscamera_app selinuxfs:file { read open };
+# ArcSoft HDR offloads to a signed DSP process through the secure FastRPC node.
+typeattribute opluscamera_app vendor_xdsp_device_client;
+allow opluscamera_app vendor_xdsp_device:chr_file r_file_perms;
 
-# ADSP RPC dir search
-allow opluscamera_app adsprpcd_file:dir search;
+# Vendor data
+allow opluscamera_app { vendor_camera_data_file vendor_camera_update_data_file vendor_data_file }:dir create_dir_perms;
+allow opluscamera_app { vendor_camera_data_file vendor_camera_update_data_file vendor_data_file }:file create_file_perms;
 
-# OPLUS vendor libraries (libui-stock.so, libutils-stock.so, libvega_common.so,
-# libHIS.so, etc.) are loaded directly by the camera app. These fall back to
-# vendor_file. system_executes_vendor_violators (set in private policy) exempts
-# the coredomain neverallows for these accesses.
-allow opluscamera_app vendor_file:file { read open getattr map execute execute_no_trans };
+# Stock libraries loaded directly by the app. The private policy marks this
+# domain as system_executes_vendor_violators for these.
 allow opluscamera_app vendor_file:dir r_dir_perms;
-allow opluscamera_app same_process_hal_file:file { read open getattr map execute };
+allow opluscamera_app vendor_file:file { r_file_perms execute };
+allow opluscamera_app same_process_hal_file:file { r_file_perms execute };
 
-# Binder: camera app ↔ camera HAL
-allow opluscamera_app hal_camera_default:binder { call transfer };
-
-# Camera properties
-get_prop(opluscamera_app, vendor_camera_prop)
-dontaudit opluscamera_app default_prop:file { read open getattr map };
+# Properties
 get_prop(opluscamera_app, camera_config_prop)
+get_prop(opluscamera_app, vendor_camera_prop)
 
-# Camera app sets properties via the property service socket
-allow opluscamera_app property_socket:sock_file write;
-
-# Camera app searches some per-user data dirs while scanning storage
-allow opluscamera_app shell_data_file:dir search;
-
-# APS (Advanced Photo System) inspects cgroup v2 while setting up DSP/CPU
-# scheduling.
-allow opluscamera_app cgroup_v2:dir search;
-
-binder_use(opluscamera_app)
-binder_call(opluscamera_app, system_server)
-binder_call(opluscamera_app, surfaceflinger)
-
+# Services
 allow opluscamera_app activity_service:service_manager find;
 allow opluscamera_app display_service:service_manager find;
-allow opluscamera_app surfaceflinger_service:service_manager find;
+allow opluscamera_app hal_system_suspend_service:service_manager find;
 allow opluscamera_app package_native_service:service_manager find;
 allow opluscamera_app permission_service:service_manager find;
-typeattribute opluscamera_app halclientdomain;
-typeattribute opluscamera_app hal_camera_client;
-allow opluscamera_app hal_system_suspend_service:service_manager find;
-dontaudit opluscamera_app vendor_hal_qspmhal_service:service_manager find;
+allow opluscamera_app surfaceflinger_service:service_manager find;
 
-# Allow binder communication with QSPM HAL
-allow opluscamera_app vendor_hal_qspmhal_default:binder { call transfer };
-
-dontaudit cameraserver opluscamera_app:process setsched;
-
-typeattribute opluscamera_app vendor_hal_perf_client;
-
-# Allow finding the offline camera service
-# allow opluscamera_app vendor_hal_offlinecamera_service:service_manager find;
+# Misc
+allow opluscamera_app cgroup_v2:dir search;
+allow opluscamera_app proc_ufs_file:file r_file_perms;
+allow opluscamera_app property_socket:sock_file write;
