@@ -33,6 +33,7 @@ $(call soong_config_set,camera,target_ships_oplus_cam,true)
 $(call soong_config_set,camera,allow_nonincreasing_timestamps,true)
 
 $(call soong_config_set,camera,package_name,com.oplus.packageName)
+$(call soong_config_set_bool,libui,vendor_legacy_graphic_buffer_layout,true)
 
 $(call inherit-product, vendor/oplus/camera/benz/blobs/blobs-vendor.mk)
 
