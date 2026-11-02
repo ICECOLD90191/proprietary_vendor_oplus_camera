@@ -15,6 +15,7 @@ from pathlib import Path
 from typing import List, NamedTuple, Tuple
 
 from extract_utils.fixups_lib import (
+    lib_fixup_remove,
     lib_fixups,
     lib_fixups_user_type,
 )
@@ -52,6 +53,7 @@ lib_fixups: lib_fixups_user_type = {
         'libmpbase',
         'libextendfile',
     ): lib_fixup_system_ext_suffix,
+    'libc++_shared': lib_fixup_remove,
 }
 
 def blob_fixup_native_winbuff_exchange(ctx, file, file_path, *args, **kwargs):
@@ -405,8 +407,6 @@ on property:sys.camera.user.removed=*
 
 namespace_imports = [
     'hardware/oplus',
-    'vendor/oneplus/astonc',
-    'vendor/oneplus/sm8550-common',
     'vendor/oplus/camera/astonc/blobs',
 ]
 

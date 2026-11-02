@@ -390,7 +390,6 @@ on property:sys.camera.user.removed=*
 
 namespace_imports = [
     'hardware/oplus',
-    'vendor/oneplus/benz',
     'vendor/oplus/camera/benz/blobs',
 ]
 

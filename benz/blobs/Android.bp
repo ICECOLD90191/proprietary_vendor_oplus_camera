@@ -5,7 +5,6 @@
 soong_namespace {
     imports: [
         "hardware/oplus",
-        "vendor/oneplus/benz",
         "vendor/oplus/camera/benz/blobs",
     ],
 }

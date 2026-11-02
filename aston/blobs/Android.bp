@@ -5,8 +5,6 @@
 soong_namespace {
     imports: [
         "hardware/oplus",
-        "vendor/oneplus/aston",
-        "vendor/oneplus/sm8550-common",
         "vendor/oplus/camera/aston/blobs",
     ],
 }
@@ -1684,13 +1682,13 @@ cc_prebuilt_library_shared {
             shared_libs: [
                 "liblog",
                 "libm",
-                "libc++_shared",
                 "libdl",
                 "libc",
             ],
         },
     },
     compile_multilib: "64",
+    check_elf_files: false,
     prefer: true,
     device_specific: true,
 }
