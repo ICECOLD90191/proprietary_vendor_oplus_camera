@@ -1,0 +1,46 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: inferno0230 <mail@inferno0230.in>
+Subject: [PATCH] Disable Ultra Steady at 120fps
+
+---
+diff --git a/smali_classes28/a9/g.smali b/smali_classes28/a9/g.smali
+index 8bbbbfa..a2958b1 100644
+--- a/smali_classes28/a9/g.smali
++++ b/smali_classes28/a9/g.smali
+@@ -3312,7 +3312,35 @@
+ .end method
+ 
+ .method public final r2()Z
+-    .locals 1
++    .locals 3
++
++    # Super EIS does not run at 120fps. The 120fps video modes are not in
++    # stock, so report it unavailable for them.
++    sget-object v0, Li8/a;->c:Lr6/a;
++
++    iget-object v1, p0, Lq7/u;->v:Ljava/lang/String;
++
++    invoke-static {}, Ld6/l0;->h()Ljava/lang/String;
++
++    move-result-object v2
++
++    invoke-static {v0, v1, v2}, Ld6/o0;->c(Lr6/a;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
++
++    move-result-object v0
++
++    const-string v1, "120"
++
++    invoke-virtual {v1, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
++
++    move-result v0
++
++    if-eqz v0, :cond_aston_eis_fps_ok
++
++    const/4 p0, 0x0
++
++    return p0
++
++    :cond_aston_eis_fps_ok
+ 
+     .line 1
+     invoke-virtual {p0}, Lq7/u;->Z0()Z

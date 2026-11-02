@@ -223,6 +223,8 @@ OPLUSCAMERA_CHECKS = (
     Check('0004 120fps recorder rate', ':cond_fps_not_high'),
     Check('0004 120fps fps helper', ':cond_fps120_ok'),
     Check('0005 120fps features reported', ':goto_aston_120fps_done'),
+    # patches/0006: super EIS reported unavailable at 120fps.
+    Check('0006 super EIS unavailable at 120fps', ':cond_aston_eis_fps_ok'),
     # blob_fixup_opluscamera_privapp_linker_ns
     Check(
         'linker-ns extractNativeLibs=false',
